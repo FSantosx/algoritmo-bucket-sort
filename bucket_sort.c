@@ -4,13 +4,13 @@
 // definição das constantes do sistema
 #define SIZE_BUCK 100
 #define NUMBER_BUCKS 10
-#define MAX 10
+#define MAX 100
 // -----------------------------------
 
 // definição da Struct ---------------
 typedef struct SBucket{
-    int top;
-    int buck[SIZE_BUCK];
+    int len;
+    int *pbuck;
 } bucket ;
 // -----------------------------------
 
@@ -18,8 +18,8 @@ typedef struct SBucket{
 void init_arr(int *arr);
 void show_arr(int *arr);
 void init_bucket(bucket *b);
-// void show_buckets(bucket *b);
-void sorted(int v[], int top);
+void show_buckets(bucket *b);
+int* sorted(int *arr, int len);
 void bucket_sort(bucket *b, int vector[]);
 void orderly_array(int *arr);
 // -----------------------------------
@@ -49,7 +49,9 @@ void show_arr(int *arr){
 void init_bucket(bucket *b){
     // inicializando todos os bucket
     for(int i = 0; i < NUMBER_BUCKS; i++){
-        b[i].top = 0;
+        b[i].len = 0;
+        // b[i].pbuck = malloc(sizeof(int));
+        b[i].pbuck = NULL;
     }
 }
 // -----------------------------------
@@ -59,58 +61,51 @@ void init_bucket(bucket *b){
 // aleatorio          ----------------
 void show_buckets(bucket *b){
     for(int i = 0; i < NUMBER_BUCKS; i++)
-        printf("\tBucket[%d].top = %d\n", i+1, b[i].top);
+        printf("\tBucket[%d].top = %d\n", i+1, b[i].len);
 }
 // -----------------------------------
 
-void bucket_sort(bucket *b, int vector[]){
-    int i,j;
-    init_bucket(b);
+void bucket_sort(bucket *b, int *vector){
+    int i,j, res;
     for(i=0;i<MAX;i++){
-        j=(NUMBER_BUCKS)-1;
-        while(1){
-            if(j<0)
-                break;
-            if(vector[i]>=j*10){
-                b[j].buck[b[j].top]=vector[i];
-                (b[j].top)++;
-                break;
+        int *arrTemp;
+        res = (int)(vector[i] / (50 / NUMBER_BUCKS));
+        if(b[res].len > 0){
+            arrTemp = malloc(sizeof(int) * (b[res].len+1));
+            for(int k = 0; k < b[res].len;k++){
+                arrTemp[k] = b[res].pbuck[k];
             }
-            j--;
+            arrTemp[b[res].len] = vector[i];
+            b[res].pbuck = arrTemp;
+            b[res].len++;
+        } else {
+            b[res].len = 1;
+            b[res].pbuck = malloc(sizeof(int) * b[res].len);
+            b[res].pbuck[0] = vector[i];
         }
     }
 
-    // laço para ordenar os elementos
-    for(i=0;i<NUMBER_BUCKS;i++)                
-        sorted(b[i].buck, b[i].top);
-
-    // devolvendo os elementos para o array original   
-    i=0;
-    for(j=0;j<NUMBER_BUCKS;j++){
-        for(int k=0;k<b[j].top;k++){
-            vector[i]=b[j].buck[k];
-            i++;
+    for(i=0;i<NUMBER_BUCKS;i++){
+        int *temp = sorted(b[i].pbuck, b[i].len);
+        for(j=0;j<b[i].len;j++){
+            printf("\t%d\n", temp[j]);
         }
+        printf("\n");
     }
 }
 
-void sorted(int v[], int top){
-    int i,j,temp,flag;
-    if(top) {
-        for(j=0;j<top-1;j++){
-            flag=0;
-            for(i=0;i<top-1;i++){
-                if(v[i+1]<v[i]){
-                    temp=v[i];
-                    v[i]=v[i+1];
-                    v[i+1]=temp;
-                    flag=1;
-                }
+int* sorted(int *arr, int len){
+    int temp;
+    for(int i = 0;i < len-1;i++){
+        for(int j=len+1; j>i; j--){
+            if(arr[i] < arr[j]){
+                temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
             }
-            if(!flag)
-                break;
         }
-    }    
+    }
+    return arr;
 }
 
 void orderly_array(int *arr){
@@ -121,11 +116,12 @@ void orderly_array(int *arr){
 }
 
 int main(void) {
-    bucket b;
-    int arr;
-    init_arr(&arr);
-    show_arr(&arr);
-    bucket_sort(&b, &arr);
-    orderly_array(&arr);
+    bucket *b = malloc(sizeof(bucket) * NUMBER_BUCKS);
+    int arr[MAX];
+    init_arr(arr);
+    init_bucket(b);
+    // for(int i = 0; i<=NUMBER_BUCKS;i++)
+    //     printf("%d",b[i].len);
+    bucket_sort(b, arr);
     return 0;
 }
