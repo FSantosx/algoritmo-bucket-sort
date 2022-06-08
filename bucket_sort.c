@@ -2,9 +2,9 @@
 #include <stdlib.h>
 
 // definição das constantes do sistema
-#define SIZE_BUCK 100
 #define NUMBER_BUCKS 10
 #define MAX 100
+#define CAP 50
 // -----------------------------------
 
 // definição da Struct ---------------
@@ -21,7 +21,6 @@ void init_bucket(bucket *b);
 void show_buckets(bucket *b);
 int* sorted(int *arr, int len);
 void bucket_sort(bucket *b, int vector[]);
-void orderly_array(int *arr);
 // -----------------------------------
 
 // funcao para iniciar ---------------
@@ -29,7 +28,7 @@ void orderly_array(int *arr);
 // aleatorio           ---------------
 void init_arr(int *arr){
     for(int i=0;i<MAX;i++)
-        arr[i] = rand() % 50;
+        arr[i] = rand() % CAP;
 }
 //------------------------------------
 
@@ -69,7 +68,7 @@ void bucket_sort(bucket *b, int *vector){
     int i,j, res;
     for(i=0;i<MAX;i++){
         int *arrTemp;
-        res = (int)(vector[i] / (50 / NUMBER_BUCKS));
+        res = (int)(vector[i] / (CAP / NUMBER_BUCKS));
         if(b[res].len > 0){
             arrTemp = malloc(sizeof(int) * (b[res].len+1));
             for(int k = 0; k < b[res].len;k++){
@@ -88,6 +87,7 @@ void bucket_sort(bucket *b, int *vector){
     for(i=0;i<NUMBER_BUCKS;i++){
         int *temp = sorted(b[i].pbuck, b[i].len);
         for(j=0;j<b[i].len;j++){
+            // printf("\t%d\n", b[i].pbuck[j]);
             printf("\t%d\n", temp[j]);
         }
         printf("\n");
@@ -96,8 +96,8 @@ void bucket_sort(bucket *b, int *vector){
 
 int* sorted(int *arr, int len){
     int temp;
-    for(int i = 0;i < len-1;i++){
-        for(int j=len+1; j>i; j--){
+    for(int i=0;i<len-2;i++){
+        for(int j=len;j>i;j--){
             if(arr[i] < arr[j]){
                 temp = arr[i];
                 arr[i] = arr[j];
@@ -108,20 +108,11 @@ int* sorted(int *arr, int len){
     return arr;
 }
 
-void orderly_array(int *arr){
-    printf("\n\tArray ordenado\n");
-    for(int i=0;i<MAX;i++){
-        printf("\tArr[%d] = %d\n", i+1, arr[i]);
-    }
-}
-
 int main(void) {
     bucket *b = malloc(sizeof(bucket) * NUMBER_BUCKS);
     int arr[MAX];
     init_arr(arr);
     init_bucket(b);
-    // for(int i = 0; i<=NUMBER_BUCKS;i++)
-    //     printf("%d",b[i].len);
     bucket_sort(b, arr);
     return 0;
 }
