@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// definicao das constantes do sistema
+// definição das constantes do sistema
 #define NUMBER_BUCKS 10
 #define MAX 100
 #define CAP 50
 // -----------------------------------
 
-// definicao da Struct ---------------
+// definição da Struct ---------------
 typedef struct SBucket{
     int len;
     int *pbuck;
 } bucket ;
 // -----------------------------------
 
-// definindo cabe�alho do projeto ----
+// definindo cabeçalho do projeto ----
 void init_arr(int *arr);
 void show_arr(int *arr);
 void init_bucket(bucket *b);
@@ -115,7 +115,7 @@ void bucket_sort(bucket *b, int *vector){
             b[res].pbuck[0] = vector[i];
         }
     }
-    // apresentacao dos buckets pr�viamente ordenados
+    // apresentação dos buckets préviamente ordenados
     for(i=0;i<NUMBER_BUCKS;i++){
         int *temp = sorted(b[i].pbuck, b[i].len);
         for(j=0;j<b[i].len;j++){
@@ -159,7 +159,11 @@ int* sorted(int *arr, int len){
 
 int main(void) {
     bucket *b = malloc(sizeof(bucket) * NUMBER_BUCKS);
+//    bucket *bpiorcaso = malloc(sizeof(bucket) * 1);
+//    bucket *bcasomedio = malloc(sizeof(bucket) * 5);
+//    bucket *bmelhorcaso = malloc(sizeof(bucket) * 10);
     int arr[MAX], op;
+//    int arrTestes[10];
     do {
         system("cls||clear");
         printf("\n|----------------------------------------|\n");
@@ -171,6 +175,7 @@ int main(void) {
         printf("| (3) Apresentar array                   |\n");
         printf("| (4) Apresentar Buckets inicializados   |\n");
         printf("| (5) Bucket Sort                        |\n");
+        printf("| (6) Criar array com valores teste      |\n");
         printf("| (0) Finalizar execucao                 |\n");
         printf("|                                        |\n");
         printf("|----------------------------------------|\n");
@@ -192,7 +197,15 @@ int main(void) {
             show_buckets(b);
             break;
         case 5:
-             bucket_sort(b, arr);
+            bucket_sort(b, arr);
+            break;
+        case 6:
+            system("cls||clear");
+            for (int i = 0; i < 10; i++){
+                printf("Forneca o %o. valor: \n", i+1);
+                scanf("%d", &arrTestes[i]);
+            }
+            system("cls||clear");
             break;
         default:
             break;
