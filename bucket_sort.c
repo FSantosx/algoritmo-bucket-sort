@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// definição das constantes do sistema
+// definicao das constantes do sistema
 #define NUMBER_BUCKS 10
 #define MAX 100
 #define CAP 50
 // -----------------------------------
 
-// definição da Struct ---------------
+// definicao da Struct ---------------
 typedef struct SBucket{
     int len;
     int *pbuck;
 } bucket ;
 // -----------------------------------
 
-// definindo cabeçalho do projeto ----
+// definindo cabe�alho do projeto ----
 void init_arr(int *arr);
 void show_arr(int *arr);
 void init_bucket(bucket *b);
@@ -23,12 +23,23 @@ int* sorted(int *arr, int len);
 void bucket_sort(bucket *b, int vector[]);
 // -----------------------------------
 
+void clearBuff(){
+    while ((getchar() != '\n') && (!EOF));
+}
+
 // funcao para iniciar ---------------
 // o vetor com numero  ---------------
 // aleatorio           ---------------
 void init_arr(int *arr){
+    char key;
+    srand(time(0));
     for(int i=0;i<MAX;i++)
         arr[i] = rand() % CAP;
+    clearBuff();
+    printf("Array iniciado com sucesso");
+    printf("\n");
+    printf("pressione <enter> para continuar ...");
+    key = getchar();
 }
 //------------------------------------
 
@@ -36,9 +47,17 @@ void init_arr(int *arr){
 // vetor com numero   ----------------
 // aleatorio          ----------------
 void show_arr(int *arr){
-    printf("\tArray Original\n");
+    system("cls||clear");
+    char key;
+    printf("Array --> \n");
     for(int i = 0; i<MAX; i++)
         printf("\tArray[%d] = %d\n", i+1, arr[i]);
+    printf("\n\n");
+
+    clearBuff();
+    printf("Pressione <enter> para retornar...");
+    key = getchar();
+    system("cls||clear");
 }
 // -----------------------------------
 
@@ -46,12 +65,18 @@ void show_arr(int *arr){
 // o bucket com topo   ---------------
 // no 0                ---------------
 void init_bucket(bucket *b){
+    char key;
     // inicializando todos os bucket
     for(int i = 0; i < NUMBER_BUCKS; i++){
         b[i].len = 0;
         // b[i].pbuck = malloc(sizeof(int));
         b[i].pbuck = NULL;
     }
+    clearBuff();
+    printf("Buckets iniciados com sucesso");
+    printf("\n");
+    printf("pressione <enter> para continuar ...");
+    key = getchar();
 }
 // -----------------------------------
 
@@ -59,12 +84,19 @@ void init_bucket(bucket *b){
 // os buckets         ----------------
 // aleatorio          ----------------
 void show_buckets(bucket *b){
+    system("cls||clear");
+    char key;
+    printf("Buckets inicializados --> \n");
     for(int i = 0; i < NUMBER_BUCKS; i++)
-        printf("\tBucket[%d].top = %d\n", i+1, b[i].len);
+        printf("\tBucket[%d].len = %d\n", i+1, b[i].len);
+    clearBuff();
+    printf("Pressione <enter> para retornar...");
+    key = getchar();
 }
 // -----------------------------------
 
 void bucket_sort(bucket *b, int *vector){
+    char key;
     int i,j, res;
     for(i=0;i<MAX;i++){
         int *arrTemp;
@@ -83,22 +115,39 @@ void bucket_sort(bucket *b, int *vector){
             b[res].pbuck[0] = vector[i];
         }
     }
-
+    // apresentacao dos buckets pr�viamente ordenados
     for(i=0;i<NUMBER_BUCKS;i++){
         int *temp = sorted(b[i].pbuck, b[i].len);
         for(j=0;j<b[i].len;j++){
-            // printf("\t%d\n", b[i].pbuck[j]);
             printf("\t%d\n", temp[j]);
         }
         printf("\n");
     }
+    clearBuff();
+    printf("Pressione <enter> para continuar...");
+    key = getchar();
+
+    // retornando os valores ao array principal
+    int v = 0;
+    for(i=0;i<NUMBER_BUCKS;i++){
+        int *temp = sorted(b[i].pbuck, b[i].len);
+        for(j=0;j<b[i].len;j++){
+            vector[v] = temp[j];
+            v++;
+        }
+        printf("\n");
+    }
+
+    clearBuff();
+    printf("Pressione <enter> para retornar...");
+    key = getchar();
 }
 
 int* sorted(int *arr, int len){
     int temp;
-    for(int i=0;i<len-2;i++){
-        for(int j=len;j>i;j--){
-            if(arr[i] < arr[j]){
+    for(int i=0; i < len; i++){
+        for(int j=i+1; j < len; j++){
+            if(arr[i] > arr[j]){
                 temp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = temp;
@@ -110,9 +159,44 @@ int* sorted(int *arr, int len){
 
 int main(void) {
     bucket *b = malloc(sizeof(bucket) * NUMBER_BUCKS);
-    int arr[MAX];
-    init_arr(arr);
-    init_bucket(b);
-    bucket_sort(b, arr);
+    int arr[MAX], op;
+    do {
+        system("cls||clear");
+        printf("\n|----------------------------------------|\n");
+        printf("|                    MENU                |\n");
+        printf("|----------------------------------------|\n");
+        printf("|                                        |\n");
+        printf("| (1) Iniciar Array randomico            |\n");
+        printf("| (2) Iniciar buckets                    |\n");
+        printf("| (3) Apresentar array                   |\n");
+        printf("| (4) Apresentar Buckets inicializados   |\n");
+        printf("| (5) Bucket Sort                        |\n");
+        printf("| (0) Finalizar execucao                 |\n");
+        printf("|                                        |\n");
+        printf("|----------------------------------------|\n");
+        printf("|                                        |\n");
+        printf("|----------------------------------------|\n\n");
+        scanf("%d", &op);
+        system("cls||clear");
+        switch(op){
+        case 1:
+            init_arr(arr);
+            break;
+        case 2:
+            init_bucket(b);
+            break;
+        case 3:
+            show_arr(arr);
+            break;
+        case 4:
+            show_buckets(b);
+            break;
+        case 5:
+             bucket_sort(b, arr);
+            break;
+        default:
+            break;
+        }
+    } while (op != 0);
     return 0;
 }
